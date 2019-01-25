@@ -1,5 +1,6 @@
 package hasler.fpaaapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
@@ -21,6 +22,7 @@ import hasler.fpaaapp.utils.DriverFragment;
 import hasler.fpaaapp.views.DacAdcView;
 import hasler.fpaaapp.views.HomeView;
 import hasler.fpaaapp.views.LpfView;
+import hasler.fpaaapp.views.OscopeView;
 import hasler.fpaaapp.views.ReadWriteView;
 
 public class ControllerActivity extends AppCompatActivity
@@ -35,7 +37,6 @@ public class ControllerActivity extends AppCompatActivity
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
-
     /* Device manager stuff */
     private D2xxManager d2xxManager;
     public D2xxManager getDeviceManager() {
@@ -53,7 +54,6 @@ public class ControllerActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_controller);
 
         // Instantiate navigation drawer
@@ -92,6 +92,9 @@ public class ControllerActivity extends AppCompatActivity
                 break;
             case 3:
                 newFragment = LpfView.newInstance();
+                break;
+            case 4:
+                newFragment = OscopeView.newInstance();
                 break;
             default:
                 newFragment = HomeView.newInstance();

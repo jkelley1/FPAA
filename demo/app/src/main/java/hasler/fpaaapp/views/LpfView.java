@@ -289,7 +289,7 @@ public class LpfView extends DriverFragment {
                         } else {
                             long[] a = sp.get(sp.size() - 1);
                             double[] b = new double[a.length];
-                            for (int i = 0; i < a.length; i++) b[i] = (a[i] - 3000) * 2.5 / 500.0;
+                            for (int i = 0; i < a.length; i++) b[i] = (a[i] - 5000) * 2.5 / 5000.0;
                             updateGraph(new double[][]{ linspace(1.0, b.length, b.length), b },
                                     new double[][]{ linspace(1.0, n.length, l.length), n });
                         }

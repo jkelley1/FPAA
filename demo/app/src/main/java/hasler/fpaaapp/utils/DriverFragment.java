@@ -13,7 +13,6 @@ public class DriverFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Get parent context and instructions to execute
         parentContext = (ControllerActivity) getActivity();
         driver = new hasler.fpaaapp.utils.Driver(parentContext);

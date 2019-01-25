@@ -1,5 +1,6 @@
 package hasler.fpaaapp.views;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -27,17 +28,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import hasler.fpaaapp.ControllerActivity;
 import hasler.fpaaapp.R;
 import hasler.fpaaapp.utils.Configuration;
 import hasler.fpaaapp.utils.DriverFragment;
 import hasler.fpaaapp.utils.Utils;
 
 public class DacAdcView extends DriverFragment {
+
     private final String TAG = "DacAdcView";
 
     protected Handler mHandler = new Handler();
     protected ProgressBar progressBar;
     protected GraphView graph;
+    protected DownloadManager downloadManager;
 
     public static DacAdcView newInstance() {
         return new DacAdcView();
@@ -113,7 +117,6 @@ public class DacAdcView extends DriverFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (container == null) return null;
         super.onCreate(savedInstanceState);
-
         // Inflate the view XML file
         final View view = inflater.inflate(R.layout.fragment_dac_adc, container, false);
 
@@ -173,7 +176,7 @@ public class DacAdcView extends DriverFragment {
                         } else {
                             long[] a = sp.get(sp.size() - 4), b = sp.get(sp.size() - 3);
                             updateGraph(new long[][]{ linspace(1, a.length, a.length), a },
-                                        new long[][]{ linspace(1, b.length, b.length), b });
+                                    new long[][]{ linspace(1, b.length, b.length), b });
                         }
 
                         return true;
@@ -274,7 +277,7 @@ public class DacAdcView extends DriverFragment {
                             double[] b = new double[a.length];
                             for (int i = 0; i < a.length; i++) b[i] = a[i]-1* 5000 * 2.5 / 50.0; // b scales from a
                             updateGraph(new double[][]{ linspace(1.0, b.length, b.length), b }, // output
-                                        new double[][]{ linspace(1.0, n.length, l.length), n }); // supposed input
+                                    new double[][]{ linspace(1.0, n.length, l.length), n }); // supposed input
                             int z = 0;
                         }
 
@@ -390,9 +393,9 @@ public class DacAdcView extends DriverFragment {
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "dac_adc.zip");
-
                 DownloadManager manager = (DownloadManager) parentContext.getSystemService(Context.DOWNLOAD_SERVICE);
                 manager.enqueue(request);
+
 
                 // Check to see if the file downloaded
                 int counter = 0, MAX_COUNTER = 100;
@@ -411,3 +414,4 @@ public class DacAdcView extends DriverFragment {
     }
 
 }
+

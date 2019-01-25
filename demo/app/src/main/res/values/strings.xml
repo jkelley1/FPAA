@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">FpaaApp</string>
-
+    <string name="oscope_title">Custom Design</string>
     <string-array name="section_titles">
         <item>Device Information</item>
         <item>Read and Write</item>
         <item>DAC ADC Example</item>
         <item>LPF Example</item>
+        <item>Custom Design</item>
     </string-array>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -54,8 +55,8 @@
         <item>none</item>
         <item>odd</item>
         <item>even</item>
-        <item >mark</item>
-        <item >space</item>
+        <item>mark</item>
+        <item>space</item>
     </string-array>
 
     <string-array name="flow_control">
@@ -85,5 +86,6 @@
     <string name="write">Write</string>
     <string name="bytes_to_write">Bytes to write</string>
     <string name="read_and_write">Read and Write</string>
+    <string name="title_activity_oscope_view">OscopeView</string>
 
 </resources>
