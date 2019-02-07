@@ -1,5 +1,7 @@
 package hasler.fpaaapp.utils;
 
+import android.os.SystemClock;
+
 import com.ftdi.j2xx.D2xxManager;
 
 import java.io.*;
@@ -213,16 +215,21 @@ public class Utils {
      * @return The read data from the zip file
      */
     public static Map<String,byte[]> getZipContents(String path) {
+        //SystemClock.sleep(2000);
         Map<String,byte[]> contents = new HashMap<>();
-
         InputStream is;
         ZipInputStream zis;
         try {
+            SystemClock.sleep(3000);
             is = new FileInputStream(path);
+            SystemClock.sleep(3000);
             zis = new ZipInputStream(new BufferedInputStream(is));
+            SystemClock.sleep(3000);
             byte[] buffer = new byte[1024];
+            SystemClock.sleep(3000);
             ZipEntry ze;
             while ((ze = zis.getNextEntry()) != null) {
+                //SystemClock.sleep(2000);
                 // Cannot handle directories
                 if (ze.isDirectory()) {
                     continue;

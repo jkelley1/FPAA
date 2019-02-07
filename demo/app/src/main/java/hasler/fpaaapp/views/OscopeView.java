@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,6 @@ public class OscopeView extends DriverFragment {
     protected GraphView graph;
     protected DownloadManager downloadManager;
     protected String url = "URL Not Found";
-    protected String title;
 
     public static OscopeView newInstance() {
         return new OscopeView();
@@ -152,6 +152,7 @@ public class OscopeView extends DriverFragment {
             @Override
             public void onClick(View v) {
                 new ThreadRunnable() {
+                    int m;
                     @Override
                     protected void onPreExecute() {
                         getDataButton.setEnabled(false);
@@ -167,7 +168,7 @@ public class OscopeView extends DriverFragment {
                             return null;
                         }
                         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                        title = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
+                        String title = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
                         File file = new File(path, title.concat(".zip"));
                         if (file.exists()) {
                             file.delete();
@@ -175,23 +176,28 @@ public class OscopeView extends DriverFragment {
                         if (!download(file)) return null;
 
                         if (!driver.connect()) return null;
-
+                        //SystemClock.sleep(10000);
                         Map<String, byte[]> zipped_files = Utils.getZipContents(file.getAbsolutePath());
                         updateProgressBar(10);
 
-                        if (!compileAndProgram(zipped_files, "tunnel_revtun_SWC_CAB.elf", 10 * 1000)) return null;
+                        if (!compileAndProgram(zipped_files, "tunnel_revtun_SWC_CAB.elf", 20 * 1000)) return null;
                         updateProgressBar(20);
-
+                        m=1;
                         if (!writeAscii(zipped_files, 0x7000, "switch_info")) return null;
+                        m=2;
                         if (!compileAndProgram(zipped_files, "switch_program.elf", 70 * 1000)) return null;
                         updateProgressBar(30);
-
+                        m=3;
                         if (!targetProgram(zipped_files)) return null;
+                        m=4;
                         updateProgressBar(70);
 
                         if (!writeAscii(zipped_files, 0x4300, "input_vector")) return null;
+                        m=5;
                         if (!writeAscii(zipped_files, 0x4200, "output_info")) return null;
+                        m=6;
                         if (!compileAndProgram(zipped_files, "voltage_meas.elf", 30 * 1000)) return null;
+                        m=7;
                         updateProgressBar(100);
 
                         // plot the switches
@@ -231,7 +237,7 @@ public class OscopeView extends DriverFragment {
                         super.onPostExecute(result);
 
                         if (result == null || !result) {
-                            makeToastMessage("Error while trying to program the design");
+                            makeToastMessage("Error while trying to program the design " + m);
                         }
 
                         progressBar.setProgress(100);
@@ -440,16 +446,17 @@ public class OscopeView extends DriverFragment {
         protected boolean download(File file) {
             // Download the file if it doesn't exist
             if (!file.exists()) {
+                String title = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
                 makeToastMessage(url + "\n" + title);
-                String urla = url;
-                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(urla));
+                //String urla = url; //Configuration.DAC_ADC_LOCATION;
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
                 request.setTitle("DAC ADC");
                 request.setDescription("Downloading the DAC ADC programming file");
 
                 request.allowScanningByMediaScanner();
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "dac_adc.zip");
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, title.concat(".zip"));
                 DownloadManager manager = (DownloadManager) parentContext.getSystemService(Context.DOWNLOAD_SERVICE);
                 manager.enqueue(request);
 
