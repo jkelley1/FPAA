@@ -267,7 +267,8 @@ public class OscopeView extends DriverFragment {
                     @Override
                     public Boolean doInBackground(Void... params) {
                         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                        File file = new File(path, "dac_adc.zip");
+                        String title = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
+                        File file = new File(path, title.concat(".zip"));
                         if (!download(file)) return null;
 
                         if (!driver.connect()) return null;
@@ -475,11 +476,6 @@ public class OscopeView extends DriverFragment {
 
             return true;
         }
-
-
-
-
-
     }
 
 }
